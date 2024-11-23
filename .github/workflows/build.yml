@@ -1,53 +1,40 @@
-name: Build Minecraft Mod
+name: Build Mod
 
 on:
   push:
     branches:
-      - main
+      - main  # or the branch you want to trigger the build on
   pull_request:
     branches:
-      - main
+      - main  # trigger on PR to main branch
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Or any other OS you want to use for the build
 
     steps:
-    # Checkout the repository
-    - name: Checkout code
-      uses: actions/checkout@v3
+      # Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    # Set up JDK 17 (use zulu distribution)
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'zulu'
+      # Set up JDK 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adoptopenjdk'
 
-    # Verify Java 17 installation
-    - name: Verify Java 17 installation
-      run: java -version
+      # Make gradlew executable
+      - name: Make gradlew executable
+        run: chmod +x gradlew
 
-    # Set up Gradle
-    - name: Set up Gradle
-      uses: gradle/wrapper-validation-action@v1
+      # Build the project
+      - name: Build the mod
+        run: ./gradlew build
 
-    # Build the project with Gradle and output a JAR file
-    - name: Build with Gradle
-      run: ./gradlew build
-
-    # Rename the JAR file using the extracted version
-    - name: Rename JAR file with version
-      run: |
-        # Rename the JAR to include the version
-        MOD_JAR_PATH="build/libs/$(ls build/libs | grep '.jar')"
-        NEW_JAR_NAME="toolSwapper-1.21.1.jar"
-        mv "$MOD_JAR_PATH" "build/libs/$NEW_JAR_NAME"
-        echo "Renamed JAR to: $NEW_JAR_NAME"
-
-    # Upload the built JAR as an artifact
-    - name: Upload mod JAR
-      uses: actions/upload-artifact@v3
-      with:
-        name: toolswapper-mod
-        path: build/libs/*.jar
+      # Upload the JAR file as an artifact
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: toolswapper  # This will be the name of the artifact
+          path: build/libs/toolswapper.jar  # Path to the built JAR file
