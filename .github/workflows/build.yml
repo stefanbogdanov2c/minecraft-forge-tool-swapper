@@ -15,14 +15,14 @@ jobs:
     steps:
       # Checkout the repository code
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # Set up JDK 17
       - name: Set up JDK 17
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'adoptopenjdk'
+          distribution: 'zulu'
 
       # Make gradlew executable
       - name: Make gradlew executable
