@@ -1,0 +1,48 @@
+name: Build Minecraft Mod
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Set up JDK (Minecraft Forge requires JDK 17)
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+
+    # Increase the version of the mod
+    - name: Increase mod version
+      run: |
+        VERSION=$(jq -r '.version' mods.toml)
+        # Increase version (e.g., 1.0 -> 1.1, etc.)
+        NEW_VERSION=$(echo $VERSION | awk -F. -v OFS=. '{$NF++;print}')
+        echo "Updated version: $NEW_VERSION"
+        jq --arg new_version "$NEW_VERSION" '.version = $new_version' mods.toml > tmp.toml && mv tmp.toml mods.toml
+
+    # Set up Gradle (used for building the mod)
+    - name: Set up Gradle
+      uses: gradle/wrapper-validation-action@v1
+
+    # Build the mod using Gradle
+    - name: Build with Gradle
+      run: ./gradlew build
+
+    # Upload the built JAR as an artifact
+    - name: Upload mod JAR
+      uses: actions/upload-artifact@v3
+      with:
+        name: toolswapper-mod
+        path: build/libs/*.jar
