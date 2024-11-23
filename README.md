@@ -5,7 +5,7 @@
   ## Installing the mod
   - Go to the Actions tab
   - Select the latest successful action
-  - Scroll down to the artefacts
+  - Scroll down to the artifacts
   - Download the file
   - Unzip it
   - Put the unzipped file to the `mods` folder of the game
