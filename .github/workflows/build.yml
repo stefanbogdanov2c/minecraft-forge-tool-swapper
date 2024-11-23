@@ -31,7 +31,7 @@ jobs:
     # Increase the version of the mod
     - name: Increase mod version
       run: |
-        VERSION=$(jq -r '.version' src/main/resources/mods.toml)
+        VERSION=$(jq -r '.version' src/main/resources/META-INF/mods.toml)
         # Increase version (e.g., 1.0 -> 1.1, etc.)
         NEW_VERSION=$(echo $VERSION | awk -F. -v OFS=. '{$NF++;print}')
         echo "Updated version: $NEW_VERSION"
