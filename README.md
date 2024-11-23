@@ -11,7 +11,7 @@
   - Put the unzipped file to the `mods` folder of the game
   - All done :D 
 
-> Note: For this mod to work on multiplayer, both the server needs to have this mod installed, as well as all the players playing on it.
+> Note: For this mod to work on multiplayer, install it on the server.
 
 
 https://github.com/user-attachments/assets/89b00565-67e4-4530-850c-67eb86eb370b
