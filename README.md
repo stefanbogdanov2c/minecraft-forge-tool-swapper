@@ -12,3 +12,7 @@
   - All done :D 
 
 > Note: For this mod to work on multiplayer, both the server needs to have this mod installed, as well as all the players playing on it.
+
+
+https://github.com/user-attachments/assets/89b00565-67e4-4530-850c-67eb86eb370b
+
