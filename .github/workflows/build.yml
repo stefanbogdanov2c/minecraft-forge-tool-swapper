@@ -37,4 +37,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: toolswapper  # This will be the name of the artifact
-          path: build/libs/toolswapper.jar  # Path to the built JAR file
+          path: build/libs/*.jar  # Path to the built JAR file
