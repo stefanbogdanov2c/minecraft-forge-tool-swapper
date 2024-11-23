@@ -28,22 +28,39 @@ jobs:
     - name: Verify Java 17 installation
       run: java -version
 
-    # Increase the version of the mod
+    # Extract the version from mods.toml (using jq or sed)
+    - name: Extract version from mods.toml
+      id: extract_version
+      run: |
+        # Extract version from mods.toml
+        VERSION=$(grep 'version' src/main/resources/META-INF/mods.toml | cut -d'=' -f2 | tr -d '[:space:]' | tr -d '"')
+        echo "Version extracted: $VERSION"
+        echo "VERSION=$VERSION" >> $GITHUB_ENV  # Set the version as an environment variable
+
+    # Increase the mod version
     - name: Increase mod version
       run: |
-        VERSION=$(jq -r '.version' src/main/resources/META-INF/mods.toml)
-        # Increase version (e.g., 1.0 -> 1.1, etc.)
         NEW_VERSION=$(echo $VERSION | awk -F. -v OFS=. '{$NF++;print}')
         echo "Updated version: $NEW_VERSION"
-        jq --arg new_version "$NEW_VERSION" '.version = $new_version' mods.toml > tmp.toml && mv tmp.toml mods.toml
+        sed -i "s/version = \"$VERSION\"/version = \"$NEW_VERSION\"/" src/main/resources/META-INF/mods.toml
+        echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV  # Update version for later steps
 
     # Set up Gradle
     - name: Set up Gradle
       uses: gradle/wrapper-validation-action@v1
 
-    # Build with Gradle
+    # Build the project with Gradle and output a JAR file
     - name: Build with Gradle
       run: ./gradlew build
+
+    # Rename the JAR file using the extracted version
+    - name: Rename JAR file with version
+      run: |
+        # Rename the JAR to include the version
+        MOD_JAR_PATH="build/libs/$(ls build/libs | grep '.jar')"
+        NEW_JAR_NAME="toolSwapper-${{ env.VERSION }}.jar"
+        mv "$MOD_JAR_PATH" "build/libs/$NEW_JAR_NAME"
+        echo "Renamed JAR to: $NEW_JAR_NAME"
 
     # Upload the built JAR as an artifact
     - name: Upload mod JAR
