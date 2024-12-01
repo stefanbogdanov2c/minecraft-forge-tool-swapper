@@ -27,7 +27,7 @@ public class ToolBreakHandler {
       if (replacement != null) {
         // Replace the broken tool
         player.getInventory().removeItem(replacement);
-        player.setItemInHand(player.getUsedItemHand(), replacement);
+        player.setItemInHand(InteractionHand.MAIN_HAND, replacement);
         player.displayClientMessage(Component.literal("Your tool has been replaced automatically!"), true);
       }
     }
